@@ -2,7 +2,7 @@ import { createConfig } from 'fuels';
 
 export default createConfig({
   contracts: [
-        '../counter-contract',
+        '../single-asset-token',
   ],
   output: './src/sway-api',
 });

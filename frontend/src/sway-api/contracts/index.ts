@@ -9,6 +9,6 @@
   Fuel-Core version: 0.22.1
 */
 
-export type { FuelLendAbi } from './FuelLendAbi';
+export type { SingleAssetTokenAbi } from './SingleAssetTokenAbi';
 
-export { FuelLendAbi__factory } from './factories/FuelLendAbi__factory';
+export { SingleAssetTokenAbi__factory } from './factories/SingleAssetTokenAbi__factory';
