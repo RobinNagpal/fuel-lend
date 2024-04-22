@@ -1,12 +1,13 @@
 import { useEffect, useState } from "react";
 import { useConnectUI, useIsConnected, useWallet } from "@fuels/react";
+import { AssetId, Address } from "fuels";
 // Import the contract factory -- you can find the name in src/contracts/contracts/index.ts.
 // You can also do command + space and the compiler will suggest the correct name.
 import type { SingleAssetTokenAbi } from "./sway-api";
 import { SingleAssetTokenAbi__factory } from "./sway-api";
 
 const CONTRACT_ID =
-  "0xc5782a69c69cd7631858028c5f48edf5c7a3ef26adda9dd6fe9a40937cb56924";
+  "0xa3f667e084fd391bf71d505b21faa6502657920ea5e16463ba4cc8622bea1e9d";
 
 export default function Home() {
   const [contract, setContract] = useState<SingleAssetTokenAbi>();
@@ -14,6 +15,8 @@ export default function Home() {
   const { connect, isConnecting } = useConnectUI();
   const { isConnected } = useIsConnected();
   const { wallet } = useWallet();
+  const owner =
+    "0xd6c0984cd2a65029b2eeb10b123050dbbe6de0d019daf7129589c225019824da";
 
   useEffect(() => {
     async function getInitialCount() {
@@ -27,7 +30,6 @@ export default function Home() {
         setContract(counterContract);
       }
     }
-    console.log("Hello");
     getInitialCount();
   }, [isConnected, wallet]);
 
@@ -58,8 +60,25 @@ export default function Home() {
           gasLimit: 100_000,
         })
         .get();
-      console.log(value.value.value);
-      setAssetId(value.toString());
+      const astId: AssetId = { value: value.value.value.toString() };
+      // console.log(value.value.value);
+      setAssetId(value.value.value.toString());
+
+      // const addr = Address.fromString(owner);
+      // const addrInput = { value: addr.toB256() };
+
+      const sym = await contract.functions
+        .symbol(astId)
+        .txParams({
+          gasPrice: 1,
+          gasLimit: 100_000,
+        })
+        .get();
+      console.log(sym);
+
+      // const ownerr = await contract.functions.owner().get();
+      // console.log("owner", ownerr);
+
       // await getCount(contract);
     } catch (error) {
       console.error(error);
