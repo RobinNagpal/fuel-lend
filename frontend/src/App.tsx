@@ -1,62 +1,85 @@
 import { useEffect, useState } from "react";
 import { useConnectUI, useIsConnected, useWallet } from "@fuels/react";
+import { AssetId, Address } from "fuels";
 // Import the contract factory -- you can find the name in src/contracts/contracts/index.ts.
 // You can also do command + space and the compiler will suggest the correct name.
-import { FuelLendAbi__factory } from "./sway-api";
-import type { FuelLendAbi } from "./sway-api";
+import type { SingleAssetTokenAbi } from "./sway-api";
+import { SingleAssetTokenAbi__factory } from "./sway-api";
 
-const CONTRACT_ID = "0x...";
+const CONTRACT_ID =
+  "0xa3f667e084fd391bf71d505b21faa6502657920ea5e16463ba4cc8622bea1e9d";
 
 export default function Home() {
-  const [contract, setContract] = useState<FuelLendAbi>();
-  const [counter, setCounter] = useState<number>();
+  const [contract, setContract] = useState<SingleAssetTokenAbi>();
+  const [assetID, setAssetId] = useState<string>();
   const { connect, isConnecting } = useConnectUI();
   const { isConnected } = useIsConnected();
   const { wallet } = useWallet();
+  const owner =
+    "0xd6c0984cd2a65029b2eeb10b123050dbbe6de0d019daf7129589c225019824da";
 
   useEffect(() => {
     async function getInitialCount() {
+      console.log("isConnected", isConnected, wallet);
       if (isConnected && wallet) {
-        const counterContract = FuelLendAbi__factory.connect(
+        const counterContract = SingleAssetTokenAbi__factory.connect(
           CONTRACT_ID,
           wallet
         );
-        await getCount(counterContract);
+        // await getCount(counterContract);
         setContract(counterContract);
       }
     }
-
     getInitialCount();
   }, [isConnected, wallet]);
 
-  const getCount = async (counterContract: FuelLendAbi) => {
-    try {
-      const { value } = await counterContract.functions
-        .count()
-        .txParams({
-          gasPrice: 1,
-          gasLimit: 100_000,
-        })
-        .get();
-      setCounter(value.toNumber());
-    } catch (error) {
-      console.error(error);
-    }
-  };
+  // const getCount = async (counterContract: SingleAssetTokenAbi) => {
+  //   try {
+  //     const { value } = await counterContract.functions
+  //       .count()
+  //       .txParams({
+  //         gasPrice: 1,
+  //         gasLimit: 100_000,
+  //       })
+  //       .get();
+  //     setCounter(value.toNumber());
+  //   } catch (error) {
+  //     console.error(error);
+  //   }
+  // };
 
   const onIncrementPressed = async () => {
     if (!contract) {
       return alert("Contract not loaded");
     }
     try {
-      await contract.functions
-        .increment()
+      const value = await contract.functions
+        .get_asset_id()
         .txParams({
           gasPrice: 1,
           gasLimit: 100_000,
         })
-        .call();
-      await getCount(contract);
+        .get();
+      const astId: AssetId = { value: value.value.value.toString() };
+      // console.log(value.value.value);
+      setAssetId(value.value.value.toString());
+
+      // const addr = Address.fromString(owner);
+      // const addrInput = { value: addr.toB256() };
+
+      const sym = await contract.functions
+        .symbol(astId)
+        .txParams({
+          gasPrice: 1,
+          gasLimit: 100_000,
+        })
+        .get();
+      console.log(sym);
+
+      // const ownerr = await contract.functions.owner().get();
+      // console.log("owner", ownerr);
+
+      // await getCount(contract);
     } catch (error) {
       console.error(error);
     }
@@ -68,7 +91,7 @@ export default function Home() {
         {isConnected ? (
           <>
             <h3 style={styles.label}>Counter</h3>
-            <div style={styles.counter}>{counter ?? 0}</div>
+            <div style={styles.counter}>{assetID ?? 0}</div>
             <button onClick={onIncrementPressed} style={styles.button}>
               Increment Counter
             </button>
