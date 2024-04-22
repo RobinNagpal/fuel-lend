@@ -13,4 +13,6 @@ Then change your directory to frontend folder and run these commands:
 
 ```npx fuels build```
 
+Then add the Contract ID you got while deploying the contract in App.tsx (line number 9).
+
 Then run `npm start` to run the development server.
