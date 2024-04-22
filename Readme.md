@@ -6,6 +6,8 @@ Then run these commands:
 
 ```forc deploy --testnet```
 
+You'll get a contractID, save it as we'll need it later.
+
 
 Then change your directory to frontend folder and run these commands:
 
