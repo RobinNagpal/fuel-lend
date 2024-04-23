@@ -4,8 +4,8 @@
 /* eslint-disable */
 
 /*
-  Fuels version: 0.79.0
-  Forc version: 0.49.3
+  Fuels version: 0.76.0
+  Forc version: 0.51.1
   Fuel-Core version: 0.22.1
 */
 
@@ -381,6 +381,32 @@ const _abi = {
       ]
     },
     {
+      "inputs": [
+        {
+          "name": "target",
+          "type": 14,
+          "typeArguments": null
+        }
+      ],
+      "name": "getBalance",
+      "output": {
+        "name": "",
+        "type": 17,
+        "typeArguments": null
+      },
+      "attributes": null
+    },
+    {
+      "inputs": [],
+      "name": "getMsgSender",
+      "output": {
+        "name": "",
+        "type": 3,
+        "typeArguments": null
+      },
+      "attributes": null
+    },
+    {
       "inputs": [],
       "name": "get_asset_id",
       "output": {
@@ -400,6 +426,22 @@ const _abi = {
     {
       "inputs": [
         {
+          "name": "asset",
+          "type": 12,
+          "typeArguments": null
+        }
+      ],
+      "name": "heavyfn",
+      "output": {
+        "name": "",
+        "type": 16,
+        "typeArguments": null
+      },
+      "attributes": null
+    },
+    {
+      "inputs": [
+        {
           "name": "to",
           "type": 3,
           "typeArguments": null
@@ -410,7 +452,7 @@ const _abi = {
           "typeArguments": null
         }
       ],
-      "name": "transfer",
+      "name": "transferTo",
       "output": {
         "name": "",
         "type": 0,
@@ -574,7 +616,7 @@ const _abi = {
         "type": 18,
         "typeArguments": null
       },
-      "offset": 11756
+      "offset": 101080
     },
     {
       "name": "NAME",
@@ -583,7 +625,7 @@ const _abi = {
         "type": 10,
         "typeArguments": null
       },
-      "offset": 11764
+      "offset": 101096
     },
     {
       "name": "SYMBOL",
@@ -592,12 +634,16 @@ const _abi = {
         "type": 9,
         "typeArguments": null
       },
-      "offset": 11788
+      "offset": 101320
     }
   ]
 };
 
 const _storageSlots: StorageSlot[] = [
+  {
+    "key": "b48b753af346966d0d169c0b2e3234611f65d5cfdb57c7b6e7cd6ca93707bee0",
+    "value": "4d59544b4e000000000000000000000000000000000000000000000000000000"
+  },
   {
     "key": "de9090cb50e71c2588c773487d1da7066d0c719849a7e58dc8b6397a25c567c0",
     "value": "0000000000000000000000000000000000000000000000000000000000000000"

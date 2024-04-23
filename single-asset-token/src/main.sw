@@ -9,13 +9,20 @@ use std::{
         burn,
         mint_to,
         transfer,
+        mint,
     },
     call_frames::{
         contract_id,
         msg_asset_id,
     },
-    constants::DEFAULT_SUB_ID,
-    context::msg_amount,
+    constants::{
+        DEFAULT_SUB_ID,
+        ZERO_B256,
+    },
+    context::{
+        msg_amount,
+        balance_of,
+    },
     string::String,
 };
 
@@ -26,7 +33,10 @@ abi SingleAsset {
     #[storage(read)]
     fn get_asset_id() -> AssetId; // New function to return AssetId
     #[storage(read, write)]
-    fn transfer(to: Identity, amount: u64) -> ();
+    fn transferTo(to: Identity, amount: u64);
+    fn heavyfn(asset: AssetId) -> String;
+    fn getMsgSender() -> Identity;
+    fn getBalance(target: ContractId) -> u64;
 }
 
 configurable {
@@ -38,6 +48,7 @@ configurable {
 storage {
     total_supply: u64 = 0,
     owner: State = State::Uninitialized,
+    symbol: str[5] = __to_str_array("MYTKN"),
 }
 
 impl SRC20 for Contract {
@@ -67,7 +78,7 @@ impl SRC20 for Contract {
     #[storage(read)]
     fn symbol(asset: AssetId) -> Option<String> {
         if asset == AssetId::default() {
-            Some(String::from_ascii_str(from_str_array(SYMBOL)))
+            Some(String::from_ascii_str("Hello World"))
         } else {
             None
         }
@@ -111,9 +122,21 @@ impl SingleAsset for Contract {
     }
 
     #[storage(read, write)]
-    fn transfer(to: Identity, amount: u64) -> () {
+    fn transferTo(to: Identity, amount: u64) {
+        mint(ZERO_B256, amount);
         transfer(to, AssetId::default(), amount);
-        ()
+    }
+
+    fn getBalance(target: ContractId) -> u64 {
+        balance_of(target, AssetId::default())
+    }
+
+    fn heavyfn(asset: AssetId) -> String {
+        String::from_ascii_str(from_str_array(SYMBOL))
+    }
+
+    fn getMsgSender() -> Identity {
+        msg_sender().unwrap()
     }
 }
 
