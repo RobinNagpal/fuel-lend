@@ -7,7 +7,7 @@ import type { SingleAssetTokenAbi } from "./sway-api";
 import { SingleAssetTokenAbi__factory } from "./sway-api";
 
 const CONTRACT_ID =
-  "0xa3f667e084fd391bf71d505b21faa6502657920ea5e16463ba4cc8622bea1e9d";
+  "0x9db383b9edfb451bc8ebe052a97ec7897f0605d438dc734deffc55a28a7186cb";
 
 export default function Home() {
   const [contract, setContract] = useState<SingleAssetTokenAbi>();
@@ -17,6 +17,12 @@ export default function Home() {
   const { wallet } = useWallet();
   const owner =
     "0xd6c0984cd2a65029b2eeb10b123050dbbe6de0d019daf7129589c225019824da";
+
+  const mintToAddress =
+    "0x11244cd0ed3efa12dc828de3cf0b98716f894486a27eb7d801820665a94c27e3";
+
+  const sub_id =
+    "0x0000000000000000000000000000000000000000000000000000000000000000";
 
   useEffect(() => {
     async function getInitialCount() {
@@ -33,53 +39,86 @@ export default function Home() {
     getInitialCount();
   }, [isConnected, wallet]);
 
-  // const getCount = async (counterContract: SingleAssetTokenAbi) => {
-  //   try {
-  //     const { value } = await counterContract.functions
-  //       .count()
-  //       .txParams({
-  //         gasPrice: 1,
-  //         gasLimit: 100_000,
-  //       })
-  //       .get();
-  //     setCounter(value.toNumber());
-  //   } catch (error) {
-  //     console.error(error);
-  //   }
-  // };
-
   const onIncrementPressed = async () => {
     if (!contract) {
       return alert("Contract not loaded");
     }
     try {
-      const value = await contract.functions
+      const valuee = await contract.functions
         .get_asset_id()
         .txParams({
           gasPrice: 1,
           gasLimit: 100_000,
         })
-        .get();
-      const astId: AssetId = { value: value.value.value.toString() };
-      // console.log(value.value.value);
-      setAssetId(value.value.value.toString());
+        .simulate();
+      const astId: AssetId = { value: valuee.value.value.toString() };
+      setAssetId(valuee.value.value.toString());
 
-      // const addr = Address.fromString(owner);
-      // const addrInput = { value: addr.toB256() };
+      const addr = Address.fromString(owner);
+      const addrInput = { value: addr.toB256() };
 
-      const sym = await contract.functions
-        .symbol(astId)
+      const addrForMinting = Address.fromString(mintToAddress);
+      const AddrInputForMinting = { value: addrForMinting.toB256() };
+
+      const bb = Address.fromString(mintToAddress);
+      const addrInputForMinting = { value: bb.toB256() };
+
+      // This Call is to mint the token to a specific address
+
+      // const minting = await contract.functions
+      //   .mint({ Address: AddrInputForMinting }, sub_id, 5)
+      //   .txParams({
+      //     gasPrice: 1,
+      //     gasLimit: 200_000,
+      //   })
+      //   .call();
+
+
+      // This call is to the constructor to set the owner of the contract
+
+      // const cons = await contract.functions
+      //   .constructor({ Address: addrInput })
+      //   .txParams({
+      //     gasPrice: 1,
+      //     gasLimit: 200_000,
+      //   })
+      //   .call();
+
+      // All this address stuff I'm still trying, will clean up once I am done
+      const transferTo =
+        "0x1e71782e1345ada5a381b7f0416f341b11ce23f69c033141a63e2263e835cfb9";
+
+      const addrForTransferring = Address.fromString(transferTo);
+      const AddrInputForTransferring = { value: addrForTransferring.toB256() };
+
+      // Call to transfer token to an Address and Contract
+
+      // const transferTokens = await contract.functions
+      //   .transferTo({ Address: AddrInputForTransferring }, 3)
+      //   .txParams({
+      //     gasPrice: 1,
+      //     gasLimit: 200_000,
+      //   })
+      //   .call();
+
+      // Currently working on this call to get the balance of the contract
+      const balance = await contract.functions
+        .getBalance({ value: transferTo.toString() })
         .txParams({
           gasPrice: 1,
-          gasLimit: 100_000,
+          gasLimit: 200_000,
         })
-        .get();
-      console.log(sym);
+        .call();
 
-      // const ownerr = await contract.functions.owner().get();
-      // console.log("owner", ownerr);
+      console.log("balance: ", balance);
 
-      // await getCount(contract);
+      // const value = await contract.functions.owner().simulate();
+      const ts = await contract.functions.total_supply(astId).simulate();
+      // console.log("tranfer: ", transferTokens);
+
+      // const ownerr = await contract.functions.getMsgSender().call();
+      console.log("total supply", ts);
+
     } catch (error) {
       console.error(error);
     }

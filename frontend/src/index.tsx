@@ -4,8 +4,8 @@ import "./index.css";
 import App from "./App";
 import reportWebVitals from "./reportWebVitals";
 import { FuelProvider } from "@fuels/react";
+import { FuelWalletConnector } from "@fuel-wallet/sdk";
 import {
-  FuelWalletConnector,
   FuelWalletDevelopmentConnector,
   FueletWalletConnector,
 } from "@fuels/connectors";
@@ -21,11 +21,7 @@ root.render(
     <QueryClientProvider client={queryClient}>
       <FuelProvider
         fuelConfig={{
-          connectors: [
-            new FuelWalletConnector(),
-            new FuelWalletDevelopmentConnector(),
-            new FueletWalletConnector(),
-          ],
+          connectors: [new FuelWalletConnector()],
         }}
       >
         <App />

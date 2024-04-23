@@ -4,8 +4,8 @@
 /* eslint-disable */
 
 /*
-  Fuels version: 0.79.0
-  Forc version: 0.49.3
+  Fuels version: 0.76.0
+  Forc version: 0.51.1
   Fuel-Core version: 0.22.1
 */
 
@@ -54,8 +54,11 @@ interface SingleAssetTokenAbiInterface extends Interface {
     total_assets: FunctionFragment;
     total_supply: FunctionFragment;
     constructor: FunctionFragment;
+    getBalance: FunctionFragment;
+    getMsgSender: FunctionFragment;
     get_asset_id: FunctionFragment;
-    transfer: FunctionFragment;
+    heavyfn: FunctionFragment;
+    transferTo: FunctionFragment;
     owner: FunctionFragment;
     burn: FunctionFragment;
     mint: FunctionFragment;
@@ -67,8 +70,11 @@ interface SingleAssetTokenAbiInterface extends Interface {
   encodeFunctionData(functionFragment: 'total_assets', values: []): Uint8Array;
   encodeFunctionData(functionFragment: 'total_supply', values: [AssetIdInput]): Uint8Array;
   encodeFunctionData(functionFragment: 'constructor', values: [IdentityInput]): Uint8Array;
+  encodeFunctionData(functionFragment: 'getBalance', values: [ContractIdInput]): Uint8Array;
+  encodeFunctionData(functionFragment: 'getMsgSender', values: []): Uint8Array;
   encodeFunctionData(functionFragment: 'get_asset_id', values: []): Uint8Array;
-  encodeFunctionData(functionFragment: 'transfer', values: [IdentityInput, BigNumberish]): Uint8Array;
+  encodeFunctionData(functionFragment: 'heavyfn', values: [AssetIdInput]): Uint8Array;
+  encodeFunctionData(functionFragment: 'transferTo', values: [IdentityInput, BigNumberish]): Uint8Array;
   encodeFunctionData(functionFragment: 'owner', values: []): Uint8Array;
   encodeFunctionData(functionFragment: 'burn', values: [string, BigNumberish]): Uint8Array;
   encodeFunctionData(functionFragment: 'mint', values: [IdentityInput, string, BigNumberish]): Uint8Array;
@@ -79,8 +85,11 @@ interface SingleAssetTokenAbiInterface extends Interface {
   decodeFunctionData(functionFragment: 'total_assets', data: BytesLike): DecodedValue;
   decodeFunctionData(functionFragment: 'total_supply', data: BytesLike): DecodedValue;
   decodeFunctionData(functionFragment: 'constructor', data: BytesLike): DecodedValue;
+  decodeFunctionData(functionFragment: 'getBalance', data: BytesLike): DecodedValue;
+  decodeFunctionData(functionFragment: 'getMsgSender', data: BytesLike): DecodedValue;
   decodeFunctionData(functionFragment: 'get_asset_id', data: BytesLike): DecodedValue;
-  decodeFunctionData(functionFragment: 'transfer', data: BytesLike): DecodedValue;
+  decodeFunctionData(functionFragment: 'heavyfn', data: BytesLike): DecodedValue;
+  decodeFunctionData(functionFragment: 'transferTo', data: BytesLike): DecodedValue;
   decodeFunctionData(functionFragment: 'owner', data: BytesLike): DecodedValue;
   decodeFunctionData(functionFragment: 'burn', data: BytesLike): DecodedValue;
   decodeFunctionData(functionFragment: 'mint', data: BytesLike): DecodedValue;
@@ -95,8 +104,11 @@ export class SingleAssetTokenAbi extends Contract {
     total_assets: InvokeFunction<[], BN>;
     total_supply: InvokeFunction<[asset: AssetIdInput], Option<BN>>;
     constructor: InvokeFunction<[owner_: IdentityInput], void>;
+    getBalance: InvokeFunction<[target: ContractIdInput], BN>;
+    getMsgSender: InvokeFunction<[], IdentityOutput>;
     get_asset_id: InvokeFunction<[], AssetIdOutput>;
-    transfer: InvokeFunction<[to: IdentityInput, amount: BigNumberish], void>;
+    heavyfn: InvokeFunction<[asset: AssetIdInput], StdString>;
+    transferTo: InvokeFunction<[to: IdentityInput, amount: BigNumberish], void>;
     owner: InvokeFunction<[], StateOutput>;
     burn: InvokeFunction<[sub_id: string, amount: BigNumberish], void>;
     mint: InvokeFunction<[recipient: IdentityInput, sub_id: string, amount: BigNumberish], void>;
